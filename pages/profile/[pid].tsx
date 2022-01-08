@@ -1,3 +1,4 @@
+import LoadingSpinner from "components/common/LoadingSpinner";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR, { mutate, trigger } from "swr";
@@ -24,13 +25,14 @@ const Profile = () => {
     `${SERVER_BASE_URL}/profiles/${encodeURIComponent(String(pid))}`,
     fetcher
   );
+  const { data: currentUser } = useSWR("user", storage);
 
+  if (!fetchedProfile) return <LoadingSpinner />;
   if (profileError) return <ErrorMessage message="Can't load profile" />;
 
   const { profile } = fetchedProfile;
   const { username, bio, image, following } = profile;
 
-  const { data: currentUser } = useSWR("user", storage);
   const isLoggedIn = checkLogin(currentUser);
   const isUser = currentUser && username === currentUser?.username;
 

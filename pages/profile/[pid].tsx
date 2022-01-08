@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR, { mutate, trigger } from "swr";
-
 import ArticleList from "../../components/article/ArticleList";
 import CustomImage from "../../components/common/CustomImage";
 import ErrorMessage from "../../components/common/ErrorMessage";
@@ -15,24 +14,20 @@ import { SERVER_BASE_URL } from "../../lib/utils/constant";
 import fetcher from "../../lib/utils/fetcher";
 import storage from "../../lib/utils/storage";
 
-const Profile = ({ initialProfile }) => {
+const Profile = () => {
   const router = useRouter();
   const {
     query: { pid },
   } = router;
 
-  const {
-    data: fetchedProfile,
-    error: profileError,
-  } = useSWR(
+  const { data: fetchedProfile, error: profileError } = useSWR(
     `${SERVER_BASE_URL}/profiles/${encodeURIComponent(String(pid))}`,
-    fetcher,
-    { initialData: initialProfile }
+    fetcher
   );
 
   if (profileError) return <ErrorMessage message="Can't load profile" />;
 
-  const { profile } = fetchedProfile || initialProfile;
+  const { profile } = fetchedProfile;
   const { username, bio, image, following } = profile;
 
   const { data: currentUser } = useSWR("user", storage);
@@ -99,11 +94,6 @@ const Profile = ({ initialProfile }) => {
       </div>
     </div>
   );
-};
-
-Profile.getInitialProps = async ({ query: { pid } }) => {
-  const { data: initialProfile } = await UserAPI.get(pid);
-  return { initialProfile };
 };
 
 export default Profile;

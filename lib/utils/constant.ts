@@ -1,4 +1,4 @@
-export const SERVER_BASE_URL = `https://conduit-medium-clone-with-nest.herokuapp.com//api`;
+export const SERVER_BASE_URL = `https://conduit-medium-clone-with-nest.herokuapp.com/api`;
 
 export const APP_NAME = `conduit`;
 
